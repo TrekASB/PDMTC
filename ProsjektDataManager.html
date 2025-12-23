@@ -8,88 +8,143 @@
   <!-- Trimble Connect Workspace API -->
   <script src="https://components.connect.trimble.com/trimble-connect-workspace-api/index.js"></script>
 
-  <!-- Chart.js -->
+  <!-- Charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     :root{
-      --primary:#0069d9;
-      --border:#e5e7eb;
+      --bg:#f5f6f8;
       --card:#ffffff;
-      --bg:#f5f5f7;
-      --text:#111827;
+      --text:#1f2937;
       --muted:#6b7280;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --border:#e5e7eb;
+      --primary:#0069d9;
+      --shadow:0 8px 22px rgba(0,0,0,.08);
+      --radius:16px;
     }
-
-    body{ margin:0; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:var(--bg);
+      color:var(--text);
+    }
     header{
-      display:flex; align-items:center; gap:14px;
-      padding:12px 14px; background:var(--card); border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 18px;
+      background:#fff;
+      border-bottom:1px solid var(--border);
+      position:sticky;
+      top:0;
+      z-index:10;
     }
     .logoBox{
-      width:92px; height:92px; border-radius:12px; background:#fff; border:1px solid #eee;
-      display:flex; align-items:center; justify-content:center; overflow:hidden;
-      box-shadow:0 1px 3px rgba(15,23,42,.08); flex:0 0 auto;
-    }
-    .logoBox img{ width:84px; height:84px; object-fit:contain; display:block; }
-    .titleBlock{ display:flex; flex-direction:column; gap:2px; }
-    .title{ font-weight:800; font-size:18px; color:var(--primary); line-height:1.1; }
-    .org{ font-weight:700; font-size:13px; opacity:.9; }
-    .dev{ font-size:11px; opacity:.75; font-style:italic; }
-
-    .headerRight{ margin-left:auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end; }
-    #status{ font-size:12px; opacity:.85; white-space:nowrap; max-width:520px; overflow:hidden; text-overflow:ellipsis; }
-    button{
-      padding:8px 10px; border-radius:8px; border:1px solid var(--primary);
-      background:var(--primary); color:#fff; font-size:13px; font-weight:600; cursor:pointer;
-      box-shadow:0 1px 2px rgba(0,0,0,.08);
-    }
-    button:disabled{ opacity:.6; cursor:default; }
-
-    .loading-spinner{
-      display:inline-block; width:12px; height:12px; border-radius:50%;
-      border:2px solid #ccc; border-top-color:var(--primary);
-      animation:spin .8s linear infinite; margin-right:6px; vertical-align:-2px;
-    }
-    @keyframes spin{ to{ transform:rotate(360deg);} }
-
-    main{ flex:1; display:flex; flex-direction:column; padding:12px 14px 18px 14px; gap:12px; overflow:auto; }
-    #error{ font-size:13px; color:#b00020; white-space:pre-wrap; }
-
-    .cards{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(360px, 1fr));
-      gap:0;
+      width:54px;height:54px;
       border:1px solid var(--border);
       border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       overflow:hidden;
+      background:#fff;
+      flex:0 0 auto;
+    }
+    .logoBox img{max-width:80%;max-height:80%}
+    .titleBlock{min-width:240px}
+    .title{font-weight:800;font-size:20px;line-height:1.1;color:var(--primary)}
+    .org{font-weight:600;font-size:13px;color:var(--text);margin-top:2px}
+    .dev{font-size:11px;color:var(--muted);margin-top:2px}
+    .headerRight{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex:0 0 auto;
+    }
+    #status{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;white-space:nowrap}
+    button{
+      border:1px solid var(--border);
+      background:var(--primary);
+      color:#fff;
+      border-radius:12px;
+      padding:9px 12px;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow:0 6px 14px rgba(0,105,217,.18);
+    }
+    button:disabled{opacity:.6;cursor:not-allowed}
+    main{padding:16px 18px 26px;max-width:1300px;margin:0 auto}
+    #error{
+      display:none;
+      background:#fff3f3;
+      border:1px solid #ffd0d0;
+      color:#7f1d1d;
+      border-radius:14px;
+      padding:12px 14px;
+      margin-bottom:14px;
+      font-size:13px;
+      white-space:pre-wrap;
+    }
+    .kpiRow{
+      display:grid;
+      grid-template-columns: repeat(6, minmax(150px, 1fr));
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .kpi{
       background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:12px 12px;
+      box-shadow:var(--shadow);
+    }
+    .kpi .label{font-size:12px;color:var(--muted);font-weight:700}
+    .kpi .value{font-size:24px;font-weight:900;margin-top:6px}
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
     }
     .card{
       background:var(--card);
-      padding:12px 12px 14px 12px;
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:12px 14px;
+      box-shadow:var(--shadow);
+      min-height:280px;
       display:flex;
       flex-direction:column;
-      min-height:280px;
-      border-right:1px solid var(--border);
-      border-bottom:1px solid var(--border);
     }
-    .card h2{ margin:0 0 8px 0; font-size:14px; font-weight:800; }
-    .divider{ height:1px; background:var(--border); margin:8px 0 10px 0; }
-    .small-text{ font-size:12px; color:var(--muted); margin-top:8px; white-space:pre-wrap; }
-    canvas{ width:100% !important; height:280px !important; }
-
-    .kpiRow{ display:flex; gap:10px; flex-wrap:wrap; }
-    .kpi{
-      background:#fff; border:1px solid var(--border); border-radius:14px;
-      padding:10px 12px; min-width:220px; flex:1;
+    .card h3{
+      margin:0 0 10px;
+      font-size:14px;
+      letter-spacing:.2px;
     }
-    .kpi .label{ font-size:12px; color:var(--muted); font-weight:800; }
-    .kpi .value{ font-size:20px; font-weight:900; margin-top:2px; }
+    .note{
+      margin-top:auto;
+      font-size:12px;
+      color:var(--muted);
+      white-space:pre-wrap;
+      border-top:1px dashed var(--border);
+      padding-top:10px;
+    }
+    .canvasWrap{position:relative;flex:1 1 auto;min-height:220px}
+    canvas{width:100% !important;height:100% !important}
+    .loading-spinner{
+      width:14px;height:14px;border-radius:50%;
+      border:2px solid var(--border);
+      border-top-color:var(--primary);
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @media (max-width: 1050px){
+      .kpiRow{grid-template-columns: repeat(3, minmax(150px, 1fr));}
+      .grid{grid-template-columns: 1fr;}
+    }
   </style>
 </head>
-
 <body>
   <header>
     <div class="logoBox">
@@ -113,398 +168,547 @@
     <div id="error"></div>
 
     <div class="kpiRow">
-      <div class="kpi">
-        <div class="label">Views (antall)</div>
-        <div class="value" id="viewsCount">–</div>
-      </div>
-      <div class="kpi">
-        <div class="label">Releases (antall)</div>
-        <div class="value" id="releasesCount">–</div>
-      </div>
-      <div class="kpi">
-        <div class="label">Custom Groups (antall)</div>
-        <div class="value" id="groupsCount">–</div>
-      </div>
+      <div class="kpi"><div class="label">Project members (antall)</div><div id="membersCount" class="value">–</div></div>
+      <div class="kpi"><div class="label">Custom groups (antall)</div><div id="groupsCount" class="value">–</div></div>
+      <div class="kpi"><div class="label">Permissions / roller (antall)</div><div id="permCount" class="value">–</div></div>
+      <div class="kpi"><div class="label">Shares / delinger (antall)</div><div id="sharesCount" class="value">–</div></div>
+      <div class="kpi"><div class="label">Object Sync (antall)</div><div id="syncCount" class="value">–</div></div>
+      <div class="kpi"><div class="label">Explorer root-foldere (antall)</div><div id="folderCount" class="value">–</div></div>
     </div>
 
-    <div class="cards">
+    <div class="grid">
       <div class="card">
-        <h2>Custom Groups – antall personer per gruppe</h2>
-        <div class="divider"></div>
-        <canvas id="groupsChart"></canvas>
-        <div class="small-text" id="groupsNote"></div>
+        <h3>Team – Custom Groups: antall personer per gruppe</h3>
+        <div class="canvasWrap"><canvas id="groupsChart"></canvas></div>
+        <div id="groupsNote" class="note"></div>
       </div>
 
       <div class="card">
-        <h2>Explorer – antall filer per mappe</h2>
-        <div class="divider"></div>
-        <canvas id="foldersChart"></canvas>
-        <div class="small-text" id="foldersNote"></div>
+        <h3>Explorer – antall filer per mappe (nivå 1)</h3>
+        <div class="canvasWrap"><canvas id="foldersChart"></canvas></div>
+        <div id="foldersNote" class="note"></div>
       </div>
 
       <div class="card">
-        <h2>Aktiviteter – fordeling per aktivitetstype</h2>
-        <div class="divider"></div>
-        <canvas id="activityChart"></canvas>
-        <div class="small-text" id="activityNote"></div>
+        <h3>Activity – fordeling per aktivitetstype</h3>
+        <div class="canvasWrap"><canvas id="activityChart"></canvas></div>
+        <div id="activityNote" class="note"></div>
+      </div>
+
+      <div class="card">
+        <h3>Shared Model / Shares – delinger over tid</h3>
+        <div class="canvasWrap"><canvas id="sharedChart"></canvas></div>
+        <div id="sharedNote" class="note"></div>
       </div>
     </div>
   </main>
 
-<script>
-  // ===== STATE =====
-  let API=null;
+  <script>
+    // =========================
+    // ProsjektDataManager (Core)
+    // Object Sync + Shares + Members/Groups/Permissions + Activity + Explorer breakdown
+    // =========================
 
-  let groupsChart=null;
-  let foldersChart=null;
-  let activityChart=null;
+    let API = null;
 
-  function escapeHtml(str){
-    return String(str??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-  }
-  function setStatus(message,isLoading=false){
-    const el=document.getElementById("status");
-    el.innerHTML=isLoading?`<span class="loading-spinner"></span>${escapeHtml(message)}`:escapeHtml(message);
-  }
-  function setError(message){ document.getElementById("error").textContent = message || ""; }
-  function setBusy(isBusy){ document.getElementById("refreshBtn").disabled = isBusy; }
+    let groupsChart = null;
+    let foldersChart = null;
+    let activityChart = null;
+    let sharedChart = null;
 
-  function destroyIf(c){ if(c) c.destroy(); return null; }
+    const $ = (id) => document.getElementById(id);
 
-  function buildBar(ctx, labels, datasets){
-    return new Chart(ctx,{
-      type:"bar",
-      data:{labels, datasets},
-      options:{
-        responsive:true,
-        plugins:{ legend:{display:false} },
-        scales:{
-          x:{ ticks:{ maxRotation:45, minRotation:0, autoSkip:true } },
-          y:{ beginAtZero:true, ticks:{ precision:0 } }
-        }
-      }
-    });
-  }
+    const statusEl = $("status");
+    const errEl = $("error");
+    const refreshBtn = $("refreshBtn");
 
-  function safeGetFn(path){
-    // path: "project.getGroups" etc.
-    const parts=path.split(".");
-    let obj=API;
-    for(const p of parts){
-      if(!obj || !(p in obj)) return null;
-      obj=obj[p];
+    const membersCountEl = $("membersCount");
+    const groupsCountEl  = $("groupsCount");
+    const permCountEl    = $("permCount");
+    const sharesCountEl  = $("sharesCount");
+    const syncCountEl    = $("syncCount");
+    const folderCountEl  = $("folderCount");
+
+    const groupsNoteEl  = $("groupsNote");
+    const foldersNoteEl = $("foldersNote");
+    const activityNoteEl= $("activityNote");
+    const sharedNoteEl  = $("sharedNote");
+
+    function setStatus(text, isLoading=false){
+      statusEl.innerHTML = isLoading ? '<span class="loading-spinner"></span>' + text : text;
     }
-    return (typeof obj === "function") ? obj.bind(parts.length>1 ? parts.slice(0,-1).reduce((o,k)=>o?.[k], API) : API) : null;
-  }
 
-  async function tryCall(paths, args){
-    // tries multiple function paths until one works
-    for(const p of paths){
-      const fn = safeGetFn(p);
-      if(!fn) continue;
+    function showError(text){
+      errEl.style.display = "block";
+      errEl.textContent = text;
+    }
+    function clearError(){
+      errEl.style.display = "none";
+      errEl.textContent = "";
+    }
+
+    function destroyChart(ch){
+      try{ if(ch){ ch.destroy(); } }catch(e){}
+      return null;
+    }
+
+    function fmtInt(n){
+      if(n===null || n===undefined) return "–";
+      const x = Number(n);
+      if(!Number.isFinite(x)) return "–";
+      return x.toLocaleString("nb-NO");
+    }
+
+    // -------------------------
+    // Workspace API helpers
+    // -------------------------
+    async function initWorkspace(){
+      if(API) return API;
+      API = await TrimbleConnectWorkspace.connect(window.parent, async (event, args) => {});
+      return API;
+    }
+
+    async function safeCall(fn, ...args){
       try{
-        return { ok:true, used:p, value: await fn(...(args||[])) };
+        if(typeof fn !== "function") return null;
+        return await fn(...args);
       }catch(e){
-        // try next
+        return null;
       }
     }
-    return { ok:false, used:null, value:null };
-  }
 
-  // ===== LOADERS =====
-
-  async function loadCustomGroups(){
-    const noteEl=document.getElementById("groupsNote");
-
-    // Try known variants
-    const res = await tryCall([
-      "project.getGroups",
-      "team.getGroups",
-      "groups.getGroups"
-    ]);
-
-    if(!res.ok){
-      noteEl.textContent =
-        "Kunne ikke hente grupper via Workspace API i dette miljøet. " +
-        "Sjekk om API-et eksponerer project.getGroups() / team.getGroups().";
-      document.getElementById("groupsCount").textContent = "–";
-      groupsChart = destroyIf(groupsChart);
-      return;
-    }
-
-    const groups = Array.isArray(res.value) ? res.value : [];
-    // Filter: custom groups (best-effort)
-    const custom = groups.filter(g => (g?.type === "custom") || (g?.isCustom === true) || (g?.scope === "custom") || (g?.name && String(g.name).toLowerCase().includes("team")));
-    // If filter removes everything, fall back to all groups
-    const usedGroups = custom.length ? custom : groups;
-
-    const labels=[];
-    const counts=[];
-
-    // member listing
-    for(const g of usedGroups){
-      const gid = g.id || g.groupId || g.uuid;
-      const gname = g.name || g.title || ("Group " + (labels.length+1));
-      if(!gid){
-        labels.push(gname);
-        counts.push(0);
-        continue;
+    async function getProjectId(){
+      // try common variants in Workspace API
+      const candidates = [
+        () => API.project?.getCurrentProject?.(),
+        () => API.project?.getProject?.(),
+        () => API.project?.getProjectId?.(),
+        () => API.project?.getId?.(),
+      ];
+      for(const c of candidates){
+        const res = await safeCall(c);
+        if(!res) continue;
+        if(typeof res === "string") return res;
+        if(res.id) return res.id;
+        if(res.projectId) return res.projectId;
       }
-
-      const membersRes = await tryCall([
-        "project.getGroupMembers",
-        "team.getGroupMembers",
-        "project.getMembersByGroup",
-        "team.getMembersByGroup"
-      ], [gid]);
-
-      const members = membersRes.ok && Array.isArray(membersRes.value) ? membersRes.value : [];
-      labels.push(gname);
-      counts.push(members.length);
+      return null;
     }
 
-    document.getElementById("groupsCount").textContent = String(usedGroups.length);
-
-    groupsChart = destroyIf(groupsChart);
-    groupsChart = buildBar(document.getElementById("groupsChart").getContext("2d"), labels, [{
-      label:"Antall personer",
-      data: counts
-    }]);
-
-    noteEl.textContent =
-      `Kilde: ${res.used}. Viser ${usedGroups.length} grupper.`;
-  }
-
-  async function loadViewsAndReleases(){
-    // Views
-    const viewsRes = await tryCall([
-      "views.getViews",
-      "view.getViews",
-      "project.getViews"
-    ]);
-    if(viewsRes.ok){
-      const views = Array.isArray(viewsRes.value) ? viewsRes.value : [];
-      document.getElementById("viewsCount").textContent = String(views.length);
-    }else{
-      document.getElementById("viewsCount").textContent = "–";
+    async function getAccessToken(){
+      // Workspace API typically provides a token that can be used as Bearer to TC APIs.
+      const candidates = [
+        () => API.user?.getAccessToken?.(),
+        () => API.auth?.getAccessToken?.(),
+        () => API.project?.getAccessToken?.(),
+      ];
+      for(const c of candidates){
+        const res = await safeCall(c);
+        if(res && typeof res === "string" && res.length > 20) return res;
+        if(res?.token) return res.token;
+        if(res?.accessToken) return res.accessToken;
+      }
+      return null;
     }
 
-    // Releases
-    const relRes = await tryCall([
-      "releases.getReleases",
-      "release.getReleases",
-      "project.getReleases"
-    ]);
-    if(relRes.ok){
-      const rel = Array.isArray(relRes.value) ? relRes.value : [];
-      document.getElementById("releasesCount").textContent = String(rel.length);
-    }else{
-      document.getElementById("releasesCount").textContent = "–";
+    // -------------------------
+    // Core REST helpers (tc/api/2.0)
+    // -------------------------
+    const PODS = [
+      "https://app.connect.trimble.com",
+      "https://app21.connect.trimble.com",
+      "https://app31.connect.trimble.com",
+      "https://app10.connect.trimble.com",
+      "https://app20.connect.trimble.com",
+      "https://app30.connect.trimble.com"
+    ];
+
+    async function fetchJson(url, token, extraHeaders={}){
+      const headers = Object.assign({
+        "Accept":"application/json",
+        "Content-Type":"application/json"
+      }, extraHeaders);
+      if(token) headers["Authorization"] = "Bearer " + token;
+
+      const r = await fetch(url, { headers, credentials:"include" });
+      const ct = r.headers.get("content-type") || "";
+      let data = null;
+      if(ct.includes("application/json")){
+        data = await r.json().catch(()=>null);
+      }else{
+        data = await r.text().catch(()=>null);
+      }
+      return { ok:r.ok, status:r.status, data };
     }
-  }
 
-  async function loadExplorerFolderBreakdown(){
-    const noteEl=document.getElementById("foldersNote");
+    async function probePod(projectId, token){
+      // Try to find correct regional pod for this projectId
+      for(const pod of PODS){
+        const url = `${pod}/tc/api/2.0/projects/${encodeURIComponent(projectId)}`;
+        const res = await fetchJson(url, token);
+        if(res.ok) return pod;
+      }
+      return PODS[0];
+    }
 
-    // We try several likely APIs. Because Workspace API differs between tenants/versions,
-    // we do best-effort and explain if it isn't available.
-    //
-    // Strategy:
-    // 1) Get a root folder/container id
-    // 2) List folders under root
-    // 3) For each folder, count files (direct children). (Optional: recursive)
-    //
-    // Try to get a root id
-    const rootRes = await tryCall([
-      "data.getRootFolder",
-      "data.getProjectRoot",
-      "data.getRoot",
-      "files.getRootFolder",
-      "files.getRoot"
-    ]);
+    async function tryEndpoints(pod, token, endpoints){
+      // endpoints are relative to /tc/api/2.0
+      const errors = [];
+      for(const ep of endpoints){
+        const url = `${pod}/tc/api/2.0/${ep.replace(/^\//,'')}`;
+        const res = await fetchJson(url, token);
+        if(res.ok) return { url, data: res.data, ep };
+        errors.push(`${res.status} ${ep}`);
+      }
+      return { url:null, data:null, ep:null, errors };
+    }
 
-    let root = rootRes.ok ? rootRes.value : null;
-    let rootId = root?.id || root?.folderId || root?.uuid || null;
+    function asArray(obj){
+      if(!obj) return [];
+      if(Array.isArray(obj)) return obj;
+      if(Array.isArray(obj.items)) return obj.items;
+      if(Array.isArray(obj.results)) return obj.results;
+      if(Array.isArray(obj.data)) return obj.data;
+      return [];
+    }
 
-    // If we didn't get a root object, some APIs allow listing folders without parent
-    const listFoldersRes = await tryCall([
-      "data.getFolders",
-      "files.getFolders",
-      "data.listFolders",
-      "files.listFolders"
-    ], rootId ? [rootId] : []);
+    // -------------------------
+    // Data collectors
+    // -------------------------
+    async function getMembers(pod, token, projectId){
+      const res = await tryEndpoints(pod, token, [
+        `projects/${projectId}/members`,
+        `projects/${projectId}/users`,
+        `projects/${projectId}/projectMembers`,
+        `projects/${projectId}/team/members`,
+      ]);
+      return { list: asArray(res.data), meta: res };
+    }
 
-    // Normalize folder list
-    let folders = [];
-    if(listFoldersRes.ok){
-      folders = Array.isArray(listFoldersRes.value) ? listFoldersRes.value : (Array.isArray(listFoldersRes.value?.items) ? listFoldersRes.value.items : []);
-    } else {
-      // Try an alternative: get a tree (flat) then aggregate
-      const treeRes = await tryCall([
-        "data.getTree",
-        "files.getTree",
-        "data.getFolderTree",
-        "files.getFolderTree"
-      ], []);
-      if(treeRes.ok){
-        // Expect array of nodes with type: folder/file and parentId
-        const nodes = Array.isArray(treeRes.value) ? treeRes.value : [];
-        const folderNodes = nodes.filter(n => (n.type === "folder") || (n.kind === "folder") || (n.isFolder === true));
-        const fileNodes = nodes.filter(n => (n.type === "file") || (n.kind === "file") || (n.isFile === true));
-        // Map folder -> direct file count
-        const folderById = new Map(folderNodes.map(f => [f.id || f.folderId || f.uuid, f]));
-        const countsByFolderId = {};
-        for(const f of folderNodes){
-          const fid = f.id || f.folderId || f.uuid;
-          if(fid) countsByFolderId[fid] = 0;
+    async function getGroups(pod, token, projectId){
+      const res = await tryEndpoints(pod, token, [
+        `projects/${projectId}/groups`,
+        `projects/${projectId}/team/groups`,
+        `projects/${projectId}/customGroups`,
+      ]);
+      return { list: asArray(res.data), meta: res };
+    }
+
+    async function getPermissions(pod, token, projectId){
+      const res = await tryEndpoints(pod, token, [
+        `projects/${projectId}/permissions`,
+        `projects/${projectId}/permissionOverview`,
+        `projects/${projectId}/permissions/overview`,
+        `projects/${projectId}/roles`,
+      ]);
+      const list = asArray(res.data);
+      return { list, meta: res };
+    }
+
+    async function getShares(pod, token, projectId){
+      const res = await tryEndpoints(pod, token, [
+        `projects/${projectId}/shares`,
+        `projects/${projectId}/sharedModels`,
+        `projects/${projectId}/sharedmodels`,
+        `projects/${projectId}/shared`,
+      ]);
+      return { list: asArray(res.data), meta: res };
+    }
+
+    async function getObjectSync(pod, token, projectId){
+      const res = await tryEndpoints(pod, token, [
+        `projects/${projectId}/objectSync`,
+        `projects/${projectId}/objectsync`,
+        `projects/${projectId}/objectSyncs`,
+        `projects/${projectId}/sync`,
+        `projects/${projectId}/objects/sync`,
+      ]);
+      return { list: asArray(res.data), meta: res };
+    }
+
+    async function getActivities(pod, token, projectId){
+      const res = await tryEndpoints(pod, token, [
+        `projects/${projectId}/activities`,
+        `activities?projectId=${encodeURIComponent(projectId)}`,
+        `projects/${projectId}/activity`,
+      ]);
+      return { list: asArray(res.data), meta: res };
+    }
+
+    async function getProject(pod, token, projectId){
+      const url = `${pod}/tc/api/2.0/projects/${encodeURIComponent(projectId)}`;
+      const res = await fetchJson(url, token);
+      return res.ok ? res.data : null;
+    }
+
+    async function getRootChildren(pod, token, rootId){
+      const res = await tryEndpoints(pod, token, [
+        `files?parentId=${encodeURIComponent(rootId)}`,
+        `files?folderId=${encodeURIComponent(rootId)}`
+      ]);
+      return { list: asArray(res.data), meta: res };
+    }
+
+    function isFolder(item){
+      if(!item) return false;
+      if(item.type && String(item.type).toLowerCase().includes("folder")) return true;
+      if(item.isFolder === true) return true;
+      // heuristic: folders often have no extension/fileSize
+      if(item.extension === undefined && item.fileSize === undefined && item.size === undefined && item.versionId === undefined) return true;
+      return false;
+    }
+
+    // -------------------------
+    // Charts
+    // -------------------------
+    function renderPie(canvasId, labels, values){
+      const ctx = document.getElementById(canvasId).getContext("2d");
+      return new Chart(ctx, {
+        type:"pie",
+        data:{ labels, datasets:[{ data: values }] },
+        options:{
+          responsive:true,
+          plugins:{
+            legend:{ position:"bottom" },
+            tooltip:{ callbacks:{ label:(ctx)=> `${ctx.label}: ${fmtInt(ctx.parsed)}` } }
+          }
         }
-        for(const file of fileNodes){
-          const pid = file.parentId || file.folderId || file.parentFolderId;
-          if(pid && pid in countsByFolderId) countsByFolderId[pid] += 1;
+      });
+    }
+
+    function renderBar(canvasId, labels, values, title){
+      const ctx = document.getElementById(canvasId).getContext("2d");
+      return new Chart(ctx, {
+        type:"bar",
+        data:{ labels, datasets:[{ label:title, data: values }] },
+        options:{
+          responsive:true,
+          scales:{
+            x:{ ticks:{ maxRotation:0, autoSkip:true } },
+            y:{ beginAtZero:true }
+          },
+          plugins:{
+            legend:{ display:false },
+            tooltip:{ callbacks:{ label:(ctx)=> `${fmtInt(ctx.parsed.y)}` } }
+          }
         }
-        const labels = folderNodes.slice(0, 20).map(f => f.name || f.title || "Mappe");
-        const counts = folderNodes.slice(0, 20).map(f => countsByFolderId[f.id || f.folderId || f.uuid] || 0);
+      });
+    }
 
-        foldersChart = destroyIf(foldersChart);
-        foldersChart = buildBar(document.getElementById("foldersChart").getContext("2d"), labels, [{
-          label:"Antall filer (direkte)",
-          data: counts
-        }]);
+    function renderLine(canvasId, labels, values, title){
+      const ctx = document.getElementById(canvasId).getContext("2d");
+      return new Chart(ctx, {
+        type:"line",
+        data:{ labels, datasets:[{ label:title, data: values, tension:0.25, fill:false }] },
+        options:{
+          responsive:true,
+          scales:{ y:{ beginAtZero:true } },
+          plugins:{
+            legend:{ position:"bottom" },
+            tooltip:{ callbacks:{ label:(ctx)=> `${fmtInt(ctx.parsed.y)}` } }
+          }
+        }
+      });
+    }
 
-        noteEl.textContent =
-          `Kilde: ${treeRes.used}. Viser de 20 første mappene (direkte filer).`;
-        return;
+    // -------------------------
+    // Main refresh
+    // -------------------------
+    async function refresh(){
+      clearError();
+      refreshBtn.disabled = true;
+      setStatus("Henter data…", true);
+
+      groupsNoteEl.textContent = "";
+      foldersNoteEl.textContent = "";
+      activityNoteEl.textContent = "";
+      sharedNoteEl.textContent = "";
+
+      try{
+        await initWorkspace();
+
+        const projectId = await getProjectId();
+        if(!projectId) throw new Error("Fant ikke projectId fra Workspace API. (Prøv å åpne extension inne i et prosjekt.)");
+
+        const token = await getAccessToken();
+        if(!token){
+          throw new Error("Fant ikke access token via Workspace API.\nTips: Sjekk at extension har tilgang til 'accesstoken' / at brukeren er innlogget.");
+        }
+
+        // Find correct regional pod (app/app21/app31…)
+        const pod = await probePod(projectId, token);
+
+        // --- Core: members/groups/permissions/shares/sync/activity
+        const [members, groups, perms, shares, sync, activities, project] = await Promise.all([
+          getMembers(pod, token, projectId),
+          getGroups(pod, token, projectId),
+          getPermissions(pod, token, projectId),
+          getShares(pod, token, projectId),
+          getObjectSync(pod, token, projectId),
+          getActivities(pod, token, projectId),
+          getProject(pod, token, projectId),
+        ]);
+
+        // KPIs
+        membersCountEl.textContent = fmtInt(members.list.length || (project?.membersCount ?? null));
+        groupsCountEl.textContent  = fmtInt(groups.list.length);
+        permCountEl.textContent    = fmtInt(perms.list.length);
+        sharesCountEl.textContent  = fmtInt(shares.list.length);
+        syncCountEl.textContent    = fmtInt(sync.list.length);
+
+        // Notes (show which endpoint worked)
+        if(!members.meta.url) groupsNoteEl.textContent += "";
+        if(!members.meta.url) showError("Kunne ikke hente members via Core API endpoints. Prøv å inspisere nettverkskall i browser (DevTools) for riktig endpoint/region.");
+
+        // --- Groups chart (members per group)
+        // Many APIs return group objects with embedded members, or just group definitions.
+        const groupBuckets = new Map();
+        for(const g of groups.list){
+          const name = g.name || g.groupName || g.title || g.id || "Ukjent gruppe";
+          let count = 0;
+          if(Array.isArray(g.members)) count = g.members.length;
+          else if(typeof g.memberCount === "number") count = g.memberCount;
+          else if(typeof g.membersCount === "number") count = g.membersCount;
+          else if(typeof g.userCount === "number") count = g.userCount;
+          groupBuckets.set(name, count);
+        }
+        // If group counts are missing, estimate by scanning members.groupIds
+        if([...groupBuckets.values()].every(v => v === 0) && members.list.length && groups.list.length){
+          const byId = new Map(groups.list.map(g => [g.id, g]));
+          const tmp = new Map();
+          for(const m of members.list){
+            const gIds = m.groupIds || m.groups || m.groupIdsList;
+            const arr = Array.isArray(gIds) ? gIds : (typeof gIds === "string" ? [gIds] : []);
+            for(const gid of arr){
+              const g = byId.get(gid);
+              const name = g?.name || gid;
+              tmp.set(name, (tmp.get(name)||0)+1);
+            }
+          }
+          if(tmp.size) {
+            groupBuckets.clear();
+            for(const [k,v] of tmp) groupBuckets.set(k,v);
+          }
+        }
+
+        const groupLabels = [...groupBuckets.keys()];
+        const groupValues = [...groupBuckets.values()];
+
+        groupsChart = destroyChart(groupsChart);
+        if(groupLabels.length){
+          groupsChart = renderPie("groupsChart", groupLabels, groupValues);
+          groupsNoteEl.textContent = `Kilde: ${groups.meta.url || "ukjent"}\nPod: ${pod}`;
+        }else{
+          groupsNoteEl.textContent = `Ingen grupper funnet (eller API gir ikke grupper i dette prosjektet).\nPod: ${pod}\nSist forsøkt: ${(groups.meta.errors||[]).join(", ")}`;
+        }
+
+        // --- Explorer breakdown (level 1 folders under root)
+        let rootId = project?.rootId || project?.rootFolderId || project?.topFolderId || project?.homeFolderId || null;
+        if(!rootId){
+          // fallback: some responses include "rootFolder" object
+          rootId = project?.rootFolder?.id || null;
+        }
+
+        foldersChart = destroyChart(foldersChart);
+
+        if(!rootId){
+          foldersNoteEl.textContent = `Fant ikke rootId fra /projects/{id}.\nPod: ${pod}\nTips: sjekk responsen fra ${pod}/tc/api/2.0/projects/${projectId} for felt som rootId / rootFolderId / topFolderId.`;
+          folderCountEl.textContent = "–";
+        }else{
+          const rootChildren = await getRootChildren(pod, token, rootId);
+          const items = rootChildren.list;
+
+          const level1Folders = items.filter(isFolder);
+          folderCountEl.textContent = fmtInt(level1Folders.length);
+
+          // For each folder: count files (direct children)
+          const folderLabels = [];
+          const folderFileCounts = [];
+          for(const f of level1Folders){
+            const fid = f.id || f.folderId || f.fileId;
+            const name = f.name || f.title || fid || "Ukjent mappe";
+            folderLabels.push(name);
+
+            let cnt = 0;
+            if(fid){
+              const child = await tryEndpoints(pod, token, [`files?parentId=${encodeURIComponent(fid)}`]);
+              const arr = asArray(child.data);
+              cnt = arr.filter(x => !isFolder(x)).length;
+            }
+            folderFileCounts.push(cnt);
+          }
+
+          if(folderLabels.length){
+            foldersChart = renderBar("foldersChart", folderLabels, folderFileCounts, "Filer");
+            foldersNoteEl.textContent = `Kilde: ${rootChildren.meta.url || "ukjent"}\nRootId: ${rootId}\nPod: ${pod}`;
+          }else{
+            foldersNoteEl.textContent = `Ingen mapper funnet under root (eller mangler tilgang).\nPod: ${pod}\nSist forsøkt: ${(rootChildren.meta.errors||[]).join(", ")}`;
+          }
+        }
+
+        // --- Activity chart
+        activityChart = destroyChart(activityChart);
+
+        const actBuckets = new Map();
+        for(const a of activities.list){
+          const t = a.type || a.activityType || a.action || a.eventType || "Ukjent";
+          actBuckets.set(t, (actBuckets.get(t)||0)+1);
+        }
+
+        const actLabels = [...actBuckets.keys()].slice(0, 25);
+        const actValues = actLabels.map(k => actBuckets.get(k));
+
+        if(actLabels.length){
+          activityChart = renderBar("activityChart", actLabels, actValues, "Aktiviteter");
+          activityNoteEl.textContent = `Kilde: ${activities.meta.url || "ukjent"}\nPod: ${pod}`;
+        }else{
+          activityNoteEl.textContent = `Kunne ikke hente aktiviteter med tilgjengelige endpoints i dette miljøet.\nPod: ${pod}\nForsøkt: ${(activities.meta.errors||[]).join(", ")}`;
+        }
+
+        // --- Shared model / shares over time (per day)
+        sharedChart = destroyChart(sharedChart);
+
+        const shareDates = new Map();
+        for(const s of shares.list){
+          const dt = s.createdAt || s.created || s.date || s.timestamp || s.sharedAt || s.createdOn;
+          if(!dt) continue;
+          const d = new Date(dt);
+          if(isNaN(d.getTime())) continue;
+          const key = d.toISOString().slice(0,10);
+          shareDates.set(key, (shareDates.get(key)||0)+1);
+        }
+
+        const shareLabels = [...shareDates.keys()].sort();
+        const shareValues = shareLabels.map(k => shareDates.get(k));
+
+        if(shareLabels.length){
+          sharedChart = renderLine("sharedChart", shareLabels, shareValues, "Delinger");
+          sharedNoteEl.textContent = `Kilde: ${shares.meta.url || "ukjent"}\nPod: ${pod}`;
+        }else{
+          sharedNoteEl.textContent = `Ingen delinger funnet (eller API gir ikke share-historikk).\nPod: ${pod}\nForsøkt: ${(shares.meta.errors||[]).join(", ")}`;
+        }
+
+        setStatus(`Oppdatert: ${new Date().toLocaleString("nb-NO")}`);
+      }catch(e){
+        showError(String(e?.stack || e?.message || e));
+        setStatus("Feil ved oppdatering");
+      }finally{
+        refreshBtn.disabled = false;
       }
-
-      // If we still can't fetch anything
-      foldersChart = destroyIf(foldersChart);
-      noteEl.textContent =
-        "Kunne ikke hente mappe-/filstruktur fra Explorer i dette miljøet. " +
-        "Workspace API varierer: forventet f.eks. data.getFolders(rootId) eller data.getTree().";
-      return;
     }
 
-    // Count files per folder (best-effort, direct children)
-    const labels=[];
-    const counts=[];
-    const MAX_FOLDERS = 20; // avoid heavy API calls
+    refreshBtn.addEventListener("click", refresh);
 
-    for(const folder of folders.slice(0, MAX_FOLDERS)){
-      const fid = folder.id || folder.folderId || folder.uuid;
-      const fname = folder.name || folder.title || "Mappe";
-      labels.push(fname);
-
-      if(!fid){
-        counts.push(0);
-        continue;
+    // Auto-start
+    (async () => {
+      try{
+        await initWorkspace();
+        setStatus("Klar. Trykk 'Oppdater data' for å hente KPI-er.");
+      }catch(e){
+        showError("Kunne ikke koble til Workspace API.\nSørg for at siden kjører som Trimble Connect extension.\n\n" + (e?.message||e));
+        setStatus("Ikke tilkoblet");
       }
-
-      const contentRes = await tryCall([
-        "data.getFolderContent",
-        "files.getFolderContent",
-        "data.listFolderContent",
-        "files.listFolderContent",
-        "data.getItems",
-        "files.getItems"
-      ], [fid]);
-
-      let items = [];
-      if(contentRes.ok){
-        items = Array.isArray(contentRes.value) ? contentRes.value : (Array.isArray(contentRes.value?.items) ? contentRes.value.items : []);
-      }
-
-      const filesOnly = items.filter(it => (it.type === "file") || (it.kind === "file") || (it.isFile === true) || (it.fileId) || (it.versionId));
-      counts.push(filesOnly.length);
-    }
-
-    foldersChart = destroyIf(foldersChart);
-    foldersChart = buildBar(document.getElementById("foldersChart").getContext("2d"), labels, [{
-      label:"Antall filer (direkte)",
-      data: counts
-    }]);
-
-    noteEl.textContent =
-      `Kilde: ${listFoldersRes.used}${rootRes.ok ? " (root: " + (rootRes.used) + ")" : ""}. ` +
-      `Viser de ${Math.min(MAX_FOLDERS, folders.length)} første mappene (direkte filer).`;
-  }
-
-  async function loadActivities(){
-    const noteEl=document.getElementById("activityNote");
-
-    // Try to fetch activities / audit log
-    const actRes = await tryCall([
-      "activity.getActivities",
-      "activity.getProjectActivities",
-      "project.getActivities",
-      "audit.getEvents",
-      "events.getEvents"
-    ]);
-
-    if(!actRes.ok){
-      activityChart = destroyIf(activityChart);
-      noteEl.textContent =
-        "Kunne ikke hente aktivitetslogg i dette miljøet via Workspace API. " +
-        "Hvis tenant ikke eksponerer activity/audit-modul, kan dette være utilgjengelig.";
-      return;
-    }
-
-    const items = Array.isArray(actRes.value) ? actRes.value : (Array.isArray(actRes.value?.items) ? actRes.value.items : []);
-    // Count by type
-    const counts = {};
-    for(const a of items){
-      const t = (a.type || a.eventType || a.action || a.name || "Unknown").toString();
-      counts[t] = (counts[t] || 0) + 1;
-    }
-
-    const labels = Object.keys(counts).sort((a,b)=>a.localeCompare(b)).slice(0, 20);
-    const data = labels.map(l => counts[l]);
-
-    activityChart = destroyIf(activityChart);
-    activityChart = buildBar(document.getElementById("activityChart").getContext("2d"), labels, [{
-      label:"Antall hendelser",
-      data
-    }]);
-
-    noteEl.textContent =
-      `Kilde: ${actRes.used}. Viser de 20 mest relevante aktivitetstypene (totalt: ${items.length} hendelser).`;
-  }
-
-  async function refreshAll(){
-    setBusy(true);
-    setError("");
-    setStatus("Henter prosjektdata …", true);
-
-    try{
-      await loadViewsAndReleases();
-      await loadCustomGroups();
-      await loadExplorerFolderBreakdown();
-      await loadActivities();
-
-      setStatus("Sist oppdatert: " + new Date().toLocaleString());
-    }catch(err){
-      console.error(err);
-      setError("Feil ved henting av prosjektdata: " + (err?.message || err));
-      setStatus("Klar, men med feil ved siste oppdatering.");
-    }finally{
-      setBusy(false);
-    }
-  }
-
-  async function init(){
-    setStatus("Kobler til Trimble Connect …", true);
-    try{
-      API = await TrimbleConnectWorkspace.connect(window.parent);
-      await refreshAll();
-    }catch(err){
-      console.error(err);
-      setError("Klarte ikke å koble til Trimble Connect Workspace API: " + (err?.message || err));
-      setStatus("Feil ved initialisering.");
-    }
-  }
-
-  document.getElementById("refreshBtn").addEventListener("click", refreshAll);
-  window.addEventListener("DOMContentLoaded", init);
-</script>
+    })();
+  </script>
 </body>
 </html>
